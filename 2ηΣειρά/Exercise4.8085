@@ -1,0 +1,101 @@
+IN 10H ; Apenergopoihsh prostasias mnhmhs
+START: MVI D,00H ; Tha xrhsimopihthei gia na kataskeuastei h exodos
+LDA 2000H ; Fortwsh bits eisodou
+MOV B,A   ; kai apothikeush tous ston B
+
+ANI 01H  ; Apomonwsh B0
+MOV C,A
+MOV A,B
+RAR
+ANI 01H  ; Metakinhsh A0 sto LSB kai apomonwsh tou
+XRA C    ; Apothikeush apotelesmatos B0 XOR A0 sth thesi 0A00H
+STA 0A00H
+
+MOV A,B
+RAR
+RAR
+ANI 01H ; Metakinhsh B1 sto LSB kai apomonwsh tou
+MOV C,A
+MOV A,B
+RAR
+RAR
+RAR
+ANI 01H ; Metakinhsh A1 sto LSB kai apomonwsh tou
+XRA C   ; Apothikeush apotelesmatos B1 XOR A1 sth thesi 0A01H
+STA 0A01H
+
+MOV A,B
+RAR
+RAR
+RAR
+RAR
+ANI 01H ; Metakinhsh B2 sto LSB kai apomonwsh tou
+MOV C,A
+MOV A,B
+RAR
+RAR
+RAR
+RAR
+RAR
+ANI 01H ; Metakinhsh A2 sto LSB kai apomonwsh tou
+ANA C   ; Apothikeush apotelesmatos B2 AND A2 sth thesi 0A02H
+STA 0A02H
+
+MOV A,B
+RAR
+RAR
+RAR
+RAR
+RAR
+RAR
+ANI 01H ; Metakinhsh B3 sto LSB kai apomonwsh tou
+MOV C,A
+MOV A,B
+RAR
+RAR
+RAR
+RAR
+RAR
+RAR
+RAR
+ANI 01H ; Metakinhsh A3 sto LSB kai apomonwsh tou
+ANA C   ; Apothikeush apotelesmatos B3 AND A3 sth thesi 0A03H
+STA 0A03H
+
+LDA 0A00H ; Ylopoihsh ths XOR pou paragei to X0
+MOV C,A
+LDA 0A01H
+XRA C
+STA 0A04H
+
+LDA 0A02H ; Ylopoihsh ths OR pou paragei to X2
+MOV C,A
+LDA 0A03H
+ORA C
+STA 0A05H
+
+LDA 0A04H ; Fortwsh X0
+MOV D,A   ; kai apothikeush tou ston D
+LDA 0A01H ; Fortwsh X1
+RAL ; Metakinhsh tou sto bit 1
+ANI 02H ; Maska gia na exaleipsoume tyxon kratoumena apo to RAL
+ORA D   ; Topothethsh tou sto bit 1 tou apotelesmatos
+MOV D,A ; Apothikeusi trexontos apotelesmatos ston D
+LDA 0A05H ; Antistoixa fortwsh tou X2 kai topothethsh tou sto bit
+RAL       ; 2 tou apotelesmatos
+RAL
+ANI 04H
+ORA D
+MOV D,A
+LDA 0A03H ;Fortwsh tou X3 kai metafora tou sto bit 3
+RAL
+RAL
+RAL
+ANI 08H ; Apomonwsh mono tou bit 3;
+ORA D   ; Kataskeuh telikou apotelesmatos
+
+CMA      ; Ektypwsh apotelesmatos sta LED
+STA 3000H
+JMP START ; Epanalave th diadikasia
+
+END

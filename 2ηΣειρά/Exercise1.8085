@@ -1,0 +1,40 @@
+; Erwthma a
+IN 10H ; Apenergopoihsh prostasias mnhmhs
+MVI A,00H ; Prwtos arithmos pou apothikeuoume
+LXI H,0900H ; prwth thesi mnhmhs sthn opoia apothikeuoume
+LOOP1: MOV M,A ; Apothikeusi arithmou
+INX H ; Epomenh thesi mnhmhs
+INR A ; Epomenos ari8mos
+JNZ LOOP1 ; Elegxos an apothikeuthkan oloi oi arithmoi mexri to FF
+
+; Erwthma B
+LXI H,0900H ; Arxikh thesi mnhmhs apo opou tha fortwthei o arithmos
+LXI B,0000H ; Arxikopoihsh metrhth asswn
+LOAD_NUMBERS: MOV A,M ; Fortwsh arithmwn
+MVI D,08H ; 8 peristrofes gia na elegxoume ola ta pshfia
+ROTATE: RAL ; Peristrofh
+JNC CONTINUE ; An einai 0 mhn auxhseis ton metrhth asswn
+INX B ; Alliws auxhsh metrhth
+CONTINUE: DCR D ; Meiwsh metrhth peristrofwn
+JNZ ROTATE ; An den exoun ginei 8 epanalave
+INX H ; Epomenh 8esh mnhmhs
+MOV A,L ; Elegxos an exoume elegxei mexri kai ton arithmo sth
+CPI 00H ; thesh 09FF
+JNZ LOAD_NUMBERS ; An oxi epanalave
+
+; Erwthma C
+LXI H,0900H ; Thesh prwtou arithmou ston HL
+MVI D,00H ; Arxikopoihsh metrhth
+COUNTER: MOV A,M ; Fortwsh arithmou
+CPI 10H ; An o arithmos einai mikroteros tou 10 proxwra
+JC SKIP ; ston epomeno
+CPI 60H ;     An o arithmos einai isos me 60 auxhse alliws an h
+JZ INCREASE ; sygkrish epistrepsei kratoumeno 0 tha einai 
+JNC SKIP ;    ypoxrewtika megalyteros kai proxwrame ston epomeno
+INCREASE: INR D ; An einai 10<=arithmos<=60 auxhse metrhth
+SKIP: INX H ; epomenh thesh mnhmhs ara epomenos arithmos
+MOV A,L ; Elegxos an exoume elegxei mexri kai ton arithmo sth
+CPI 00H ; thesh 09FF
+JNZ COUNTER ; An oxi epanalave 
+
+END

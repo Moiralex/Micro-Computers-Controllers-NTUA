@@ -1,0 +1,35 @@
+LXI B,01F4H ; Kathorismos xronou kathysterhshs. 500 dekadiko sto
+            ; zeugos BC wste kathysterhsh=500*1ms=0.5sec
+
+LDA 2000H ; Diavasma arxikhs eisodou gia na anapsei swsta prwta to
+          ; LSB LED se kathe periptwsh
+RAL       ; Metafora tou MSB sto CY
+JNC STARTLEFT ; Elegxos poia einai h arxikh fora peristrofhs
+STARTRIGHT: MVI D,FDH ;An einai dexia D<--FD wste meta apo mia
+JMP STARTSTOP ;dexia peristrofh, na anapsei arxika to 1o LED
+STARTLEFT: MVI D,7FH ;An einai aristerh D<--7F entelws antistoixa
+   ;O D sto programma tha periexei thn trexousa katastash twn LED
+
+STARTSTOP: LDA 2000H ;Anagnwsh ths eisodou
+MOV E,A ; Proswrinh apothhkeush eisodou gia metepeita elegxo
+RAR    ; Metafora tou LSB sto CY
+JNC STARTSTOP ; Elegxos an LSB=0 gia paush ths peristrofhs
+MOV A,E ; Epanafora eisodou ston A
+RAL    ; Metafora tou MSB sto CY
+JNC ARISTERA ; An MSB=0 metavash sth routina aristerhs peristrofhs
+
+DEXIA: MOV A,D ; Metafora trexousas katastashs ston A
+RRC ; Dexia peristrofh tou anamenou LED
+MOV D,A ; Apothhkeush trexousas katastashs
+STA 3000H ; Ektypwsh ths katastashs sta LED exodou
+CALL DELB ; Klhsh ths routinas kathysterhshs
+JMP STARTSTOP ; LOOP
+
+ARISTERA: MOV A,D ;plhrhs antistoixia me routina dexias peristrofhs
+RLC ;Aristerh peristrofh tou anamenou LED
+MOV D,A
+STA 3000H
+CALL DELB
+JMP STARTSTOP
+
+END

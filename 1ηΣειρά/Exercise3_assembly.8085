@@ -1,0 +1,46 @@
+LXI B,07D0H ; Fortwma tou 2000 sto zeugos BC gia thn DELB
+START: LDA 2000H ; Fortwsh eisodou
+CPI C8H ; Elegxos an eisodos megalyterh toy 199
+JNC GTHAN199 ; An nai metavash sto GTHAN199
+CPI 64H ; Elegxos an eisodos > 99 alla mikroterh tou 199
+JNC GTHAN99 ; An nai metavash sto GTHAN99
+MVI D,FFH ; Arxikopoihsh metrhth dekadwn sto FF wste otan
+          ; auxh8ei kata 1 na xekina apo to 0
+
+DECA: INR D ; Auxhsh dekadwn
+SUI 0AH ; Afairoume synexws to 10
+JNC DECA ; ews otou to apotelesma<0 wste na metrhsoume tis dekades
+ADI 0AH ; Prosthetoume 10 ston arnhtiko pou proekypse gia na
+        ; paroume tis monades
+MOV E,A ; Metakinhsh monadwn ston kataxwrhth E
+MOV A,D ; Metakinhsh dekadwn ston accumulator
+RAL     ; wste na tis feroume sta 4 MSB pshfia me ta diadoxika RAL
+RAL
+RAL
+RAL
+ANI F0H ; Maska gia na vgaloume tyxon kratoumeno pou topo8eth8hke
+        ; sto bit 3 kata tis peristrofes
+ORA E   ; Topo8ethsh monadwn sta 4 LSB tou accumulator
+CMA     ; Symplhrwma ws pros 1 logw arnhtikhs logikhs exodou
+STA 3000H ; Eggrafh sthn exodo
+JMP START ; Epistrofh sthn arxh gia aenah leitourgia
+
+GTHAN199: MVI A,0FH ; Logw arnhtikhs logikhs 0F gia na
+                    ; anavoun ta 4 MSB LEDs
+STA 3000H ; Anama sthn exodo
+CALL DELB ; Kathysterhsh
+MVI A,FFH ; FF gia na svhsoun ola ta LED
+STA 3000H ; Svhsimo olwn twn led sthn exodo
+CALL DELB ; Kathysterhsh
+JMP START ; Epistrofh sthn arxh gia aenah leitourgia
+
+GTHAN99: MVI A,F0H ; Entelws antistoixa me to parapanw kommati
+                   ; alla F0 wste na anapsoun ta 4 LSB
+STA 3000H
+CALL DELB
+MVI A,FFH
+STA 3000H
+CALL DELB
+JMP START
+
+END

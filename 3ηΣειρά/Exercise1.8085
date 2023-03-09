@@ -1,0 +1,66 @@
+IN 10H ; Apenergopoihsh prostasias mnhmhs
+LXI B,0064H ; 100msec kathysterhsh gia thn DELB
+LXI D,0B00H ;Dieythynsh pou 8a vrei h STDM ta pshfia pros apeikonish
+MVI H,00H ; Arxikopoihsh xronometrou sto 0
+MVI A,0DH ; Energopoihsh diakophs RST6.5
+SIM
+EI
+
+LOOP1: MOV A,H ; Sygkrish xronometrou me to 0
+CPI 00H ; An einai 0 svhse ta fwta
+JZ TURN_OFF
+
+LXI B,0064H ; Ftiaxe pali tous BC kai DE pou xalane apo thn STDM
+LXI D,0B00H
+
+MVI A,00H ; Anapse ta fwta
+STA 3000H
+MVI A,10H ; Mhn ektypwseis tipota sta 7-segment 1,2,5,6
+STA 0B00H
+STA 0B01H
+STA 0B04H
+STA 0B05H
+MOV A,H ;Xronometro ston A
+ANI 0FH ; Krata to prwto dekadiko pshfio kai apeikonise to sto 
+STA 0B02H ; 7-segment display 3
+MOV A,H  ; Krata to prwto dekadiko pshfio kai apeikonise to sto 
+RAR      ; 7-segment display 4
+RAR
+RAR
+RAR
+ANI 0FH
+STA 0B03H
+
+MOV A,H ; Apothikeush xronometrou sth mnhmh gia na mh xalasei apo
+STA 0B06H ; thn klhsh ths STDM. (oxi stoiva gt den kanoume RET sth
+CALL STDM ; sth routina exyphrethshs kai mporei na mh ginoun ta
+LDA 0B06H ; pop meta. Epanafora xronometrou
+MOV H,A
+MVI L,0AH ; 10 fores klhsh ths routinas apeikonishs gia na fainetai
+DISPLAY: CALL DCD ; to 7-segment synexomena. Kathe fora 100ms 
+CALL DELB ; Ara synolo 1sec
+DCR L
+JNZ DISPLAY
+DCR H ; Meiwsh xronometrou
+MOV A,H ; Gia na kratame dekadikh metrhsh kathe fora pou meiwnontas
+ANI 0FH ; ftanoume se arithmo XFH afairoume 6 gia na ginei
+CPI 0FH ; dekadikos
+JNZ LOOP1
+MOV A,H
+SUI 06H
+MOV H,A
+JMP LOOP1
+
+TURN_OFF: MVI A,FFH ; Svhsimo fwtwn
+STA 3000H
+STUCK: JMP LOOP1 ; Xana elegxos xronometrou
+
+INTR_ROUTINE:
+MVI H,60H ; An ginei diakoph vale 60 sec sto xronometro
+INX SP ; Kane pop to return address afou den tha kanoume RET
+INX SP ; Gia na mh synexisei to programma apo lathos shmeio
+       ; kai xasoume kapoio deuterolepto
+EI ; Energopoihse pali tis diakopes
+JMP LOOP1 ; Phgaine sto kyriws programma
+
+END

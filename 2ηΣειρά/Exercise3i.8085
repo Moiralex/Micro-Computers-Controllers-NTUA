@@ -1,0 +1,32 @@
+MAIN: LDA 2000H ; Fortwsh eisodou
+MVI C,00H ; Thesh tou prwtou assou arxika ypothetoumai sto bit 0
+MOV B,A ; Apothikeush eisodou ston B 
+ROTATES: MOV A,B ; Epanafora eisodou pou exei peristrafei 0-7 fores
+RAR ; peristrofh eisodou gia elegxo tou trexontos LSB
+JC FOUND ; An einai 1 vrhkame ton prwto asso
+INR C ; An oxi auxhsh ths pithanhs theshs tou prwtou assou
+MOV B,A ; Proswrinh apothikeush peristrammenhs eisodou
+MOV A,C ; Elegxos an elegxthikan kai ta 8 bits opote den yparxei
+CPI 08H ; assos sthn eisodo. An oxi elegxe to epomeno bit
+JNZ ROTATES ; epistrefwntas sth ROTATES
+
+NO_ONES: MVI A,FFH ; An den yparxei assos svhse ola ta LED
+STA 3000H
+JMP MAIN
+
+FOUND: MVI E,01H ; An vrethike o C periexei th thesh sthn opoia
+LOOP1: MOV A,C   ; vrethike o prwtos assos kai vasei autou 
+CPI 00H          ; peristrefoume ton E wste o monadikos assos tou
+JZ EXIT          ; na paei sthn thesh tou prwtou assou ths eisodou
+DCR C
+MOV A,E
+RAL
+MOV E,A
+JMP LOOP1
+
+EXIT: MOV A,E  ; Anapse to LED ths theshs tou prwtou assou
+CMA
+STA 3000H
+JMP MAIN
+
+END

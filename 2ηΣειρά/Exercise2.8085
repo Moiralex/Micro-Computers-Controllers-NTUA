@@ -1,0 +1,37 @@
+MVI D,00H ; Flag se poia katastash einai o diakopths
+MVI E,00H ; "Xronometro" oso den einai 0 anave ta fwta
+LXI B,0064H ; 64H = 100 dekadiko gia na exoume kathysterhsh 0.1s
+            ; gia na exoume thn epithymhth diakritikh ikanothta
+MAIN: MOV A,D ; Fortwsh tou flag
+CPI 00H ; flag = 0 shmainei oti einai sto off o diakopths
+JZ CHECK1 ; An einai sto off elegxe an egine on
+CPI 01H ; An einai sto 1 elegxe an xanagine off
+JZ CHECK2
+
+CONTINUE: MOV A,E ; Routina xeirismou fwtwn
+CPI 00H ; An to "xronometro" einai 0 svhse ta fwta
+JZ TURNOFF
+MVI A,00H ; Alliws anapse ta
+STA 3000H
+CALL DELB ; Perimene 0.1sec
+DCR E ; Meiwse to xronometro kata 1
+JMP MAIN ; Gyrna sth routina elegxou tou MSB
+
+CHECK1: LDA 2000H ; Fortwsh eisodou
+RAL ; Elegxos an to MSB einai 1
+JNC CONTINUE ; An oxi phgaine sth routina pou xeirizetai ta fwta
+INR D ;        An nai kane to flag 1 kai meta phgaine sthn routina
+JMP CONTINUE ; twn fwtwn
+
+CHECK2: LDA 2000H ; Fortwsh eisodou
+RAL ; Elegxos an to MSB xanaegine 0 
+JC CONTINUE ; An oxi phgaine sth routina pou xeirizetai ta fwta
+MVI E,C8H ; Vale to "xronometro" sto 200 wste ta fwta na meinoun
+MVI D,00H ; anamena gia 200*0.1=20sec kai epanafora tou flag sto 0
+JMP CONTINUE ; Ystera phgaine sth routina pou xeirizetai ta fwta
+
+TURNOFF: MVI A,FFH ; Svhsimo fwtwn
+STA 3000H
+JMP MAIN ; Epistrofh sth routina elegxou tou MSB
+
+END

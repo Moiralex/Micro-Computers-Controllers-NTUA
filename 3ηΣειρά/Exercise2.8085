@@ -1,0 +1,73 @@
+IN 10H ;Xekleidwma mnhmhs
+MVI A,0DH ; Energopoihsh diakophs Reset6.5
+SIM
+EI
+
+MVI A,10H ;Arxikopoihsh twn 7-segment displays sto keno
+STA 0A00H
+STA 0A01H
+STA 0A02H
+STA 0A03H
+STA 0A04H
+STA 0A05H
+
+MVI D,05H ;Arxikopoihsh
+MVI E,10H
+
+MOV A,D ; Katwflia se theseis mnhmhs giati xreiazontai oi
+STA 0A06H ; kataxwrhtes D,E gia thn STDM
+MOV A,E
+STA 0A07H
+
+MAIN: LXI D,0A00H ;Theseis mhnmhs pou tha xrhsimopoihsei h STDM
+CALL STDM
+CALL DCD ;Ektypwsh sta 7-segment diplays
+EI ; Energopoihsh diakopwn afou ginei prohgoumenh diakoph
+JMP MAIN ;Infinite loop
+
+INTR_ROUTINE:
+
+INX SP ; Pop dieuthynshs epistrofhs giati de xrhsimopoioume RET
+INX SP
+
+CALL KIND ;Anagnwsh least significant digit
+STA 0A00H ;Apothikeush tou sth thesh dexioterou 7-segment display
+MOV H,A   ;kai ston kataxwrhth H
+CALL KIND ;Anagnwsh most significant digit
+STA 0A01H ;Apothikeush tou sth thesh 2ou 7-segment display
+RAL ;Metakinhsh tou sta 4 most significant bits
+RAL
+RAL
+RAL
+ANI F0H ;Maska gia exaleipsh tyxon kratoumeno sta LSBits
+ORA H ;Dhmiourgia oloklhrou tou hex arithmou pou diavasthke
+MOV H,A ;Apothikeush tou ston H
+LDA 0A06H ;Epanafora katwfliwn stous D kai E
+MOV D,A
+LDA 0A07H
+MOV E,A
+MOV A,H ;Epanafora arithmou pou diavasthke ston A
+
+CMP D ;Sygkrish me to katw katwfli kai anama tou prwtou LED an
+JC LED_1 ; o arithmos einai mikroteros h isos autou 
+JZ LED_1
+
+CMP E ;Alliws sygkrish me to anw katwfli kai anama tou deuterou
+JC LED_2 ;LED an einai mikroteros h isos autou efoson einai
+JZ LED_2 ;megalyteros tou katw katwfliou
+
+JMP LED_3 ;Alliws anama tou 3ou LED
+
+LED_1: MVI A,FEH ; Anama prwtou LED kai epistrofh sth MAIN
+STA 3000H
+JMP MAIN
+
+LED_2: MVI A,FDH ; Anama deuterou LED kai epistrofh sth MAIN
+STA 3000H
+JMP MAIN
+
+LED_3: MVI A,FBH ; Anama tritou LED kai epistrofh sth MAIN
+STA 3000H
+JMP MAIN
+
+END

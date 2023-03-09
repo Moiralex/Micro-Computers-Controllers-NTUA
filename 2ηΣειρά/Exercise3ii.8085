@@ -1,0 +1,24 @@
+READIN: CALL KIND ; Diavasma plhktrologiou
+CPI 00H   ; Elegxos an auto pou diavasame einai metaxy tou 0
+JZ READIN ; kai tou 8 alliws xanadiavase
+CPI 09H
+JNC READIN
+
+MOV B,A ; Apothikeush arithmou ston B
+MVI A,00H ; Arxika ypothetoume ola ta LED anammena
+LOOP1: DCR B ; Meiwsh arithmou kata 1
+MOV C,A      ; Apothikeush LED ston C
+MOV A,B ; Elegxos an o arithmos mhdenisthke ara ta anammena LED
+CPI 00H ; tha einai stis swstes theseis kai metavainoume sth
+JZ END  ; routina ektypwshs
+MOV B,A ; Alliws apothikeysh tou meiwmenou arithmou ston B
+MOV A,C ; kai svhsimo kai tou epomenou LED
+RAL
+INR A
+JMP LOOP1 ; Kai epanalave ton elegxo th diadikasia
+
+END: MOV A,C ; Fortwsh svhstwn LED
+STA 3000H    ; Kai ektypwsh tous
+JMP READIN   ; Epistrofh sthn anagnwsh plhktrologiou
+
+END

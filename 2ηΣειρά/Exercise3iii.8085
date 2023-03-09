@@ -1,0 +1,227 @@
+IN 10H ; Apenergopoishsh prostasias mnhmhs
+MVI A,00H ; Arxikopoihsh sto 0 thesewn mnhmhs pou tha
+STA 0A00H ; xrhsimopoihthoun gia thn ektypwsh sto 7-segment 
+STA 0A01H ; display
+STA 0A02H
+STA 0A03H
+STA 0A04H
+STA 0A05H
+
+CHECK0: MVI A,FEH ; Elegxos grammhs 0 apothikeuontas sth thesh 
+STA 2800H ; 2800H to 11111110 dyadiko
+LDA 1800H ; diavase sthles twn plhktrwn
+ANI 07H ; Maska gia na apomonwsoume ta 3 LSB
+CPI 07H ; An kai ta 3 einai 1 ara den paththike kanena plhktro
+JZ CHECK1 ; ths grammhs elegxe thn epomenh grammh
+
+CASE01: CPI 06H ; Elegxe an paththike to prwto plhktro ths grammhs
+JNZ CASE02 ; An oxi elegxe to an paththike to epomeno plhktro
+MVI A,86H ; Alliws apothikeuse ston A ton kwdiko tou plhktrou
+JMP DISP_OUTPUT ; pou paththike kai phgaine sth routina exodou
+
+CASE02: CPI 05H ; Elegxe an paththike to deutero plhktro ths
+JNZ CHECK1 ; Mporei na paraleifthei o elegxos gt an ftasoume edw
+MVI A,85H  ; sigoura exei paththei to deutero plhktro
+JMP DISP_OUTPUT
+
+
+CHECK1: MVI A,FDH ; Elegxos grammhs 1
+STA 2800H
+LDA 1800H
+ANI 07H
+CPI 07H
+JZ CHECK2
+
+CASE11: CPI 06H ; Elegxos an paththike kapoio apo ta tria plhktra
+                ; ths
+JNZ CASE12      
+MVI A,84H
+JMP DISP_OUTPUT
+
+CASE12: CPI 05H
+JNZ CASE13
+MVI A,80H
+JMP DISP_OUTPUT
+
+CASE13: CPI 03H
+JNZ CHECK2
+MVI A,82H
+JMP DISP_OUTPUT
+
+
+CHECK2: MVI A,FBH ; Elegxos grammhs 2
+STA 2800H
+LDA 1800H
+ANI 07H
+CPI 07H
+JZ CHECK3
+
+CASE21: CPI 06H ; Elegxos an paththike kapoio apo ta tria plhktra
+                ; ths
+JNZ CASE22
+MVI A,00H
+JMP DISP_OUTPUT
+
+CASE22: CPI 05H
+JNZ CASE23
+MVI A,83H
+JMP DISP_OUTPUT
+
+CASE23: CPI 03H
+JNZ CHECK3
+MVI A,81H
+JMP DISP_OUTPUT
+
+
+CHECK3: MVI A,F7H ; Elegxos grammhs 3
+STA 2800H
+LDA 1800H
+ANI 07H
+CPI 07H
+JZ CHECK4
+
+CASE31: CPI 06H ; Elegxos an paththike kapoio apo ta tria plhktra
+                ; ths
+JNZ CASE32
+MVI A,01H
+JMP DISP_OUTPUT
+
+CASE32: CPI 05H
+JNZ CASE33
+MVI A,02H
+JMP DISP_OUTPUT
+
+CASE33: CPI 03H
+JNZ CHECK4
+MVI A,03H
+JMP DISP_OUTPUT
+
+
+CHECK4: MVI A,EFH ; Elegxos grammhs 4
+STA 2800H
+LDA 1800H
+ANI 07H
+CPI 07H
+JZ CHECK5
+
+CASE41: CPI 06H ; Elegxos an paththike kapoio apo ta tria plhktra
+                ; ths
+JNZ CASE42
+MVI A,04H
+JMP DISP_OUTPUT
+
+CASE42: CPI 05H
+JNZ CASE43
+MVI A,05H
+JMP DISP_OUTPUT
+
+CASE43: CPI 03H
+JNZ CHECK5
+MVI A,06H
+JMP DISP_OUTPUT
+
+
+CHECK5: MVI A,DFH ; Elegxos grammhs 5
+STA 2800H
+LDA 1800H
+ANI 07H
+CPI 07H
+JZ CHECK6
+
+CASE51: CPI 06H ; Elegxos an paththike kapoio apo ta tria plhktra
+                ; ths
+JNZ CASE52
+MVI A,07H
+JMP DISP_OUTPUT
+
+CASE52: CPI 05H
+JNZ CASE53
+MVI A,08H
+JMP DISP_OUTPUT
+
+CASE53: CPI 03H
+JNZ CHECK6
+MVI A,09H
+JMP DISP_OUTPUT
+
+
+CHECK6: MVI A,BFH ; Elegxos grammhs 6
+STA 2800H
+LDA 1800H
+ANI 07H
+CPI 07H
+JZ CHECK7
+
+CASE61: CPI 06H ; Elegxos an paththike kapoio apo ta tria plhktra
+                ; ths
+JNZ CASE62
+MVI A,0AH
+JMP DISP_OUTPUT
+
+CASE62: CPI 05H
+JNZ CASE63
+MVI A,0BH
+JMP DISP_OUTPUT
+
+CASE63: CPI 03H
+JNZ CHECK7
+MVI A,0CH
+JMP DISP_OUTPUT
+
+
+CHECK7: MVI A,7FH ; Elegxos grammhs 7
+STA 2800H
+LDA 1800H
+ANI 07H
+CPI 07H
+JZ DISP_LAST ; An den paththike kanena plhktro kalese thn 
+             ; DISP_LAST pou xanaektypwnei to teleutaio plhktro
+             ; pou paththike
+
+CASE71: CPI 06H ; Elegxos an paththike kapoio apo ta tria plhktra
+                ; ths
+JNZ CASE72
+MVI A,0DH
+JMP DISP_OUTPUT
+
+CASE72: CPI 05H
+JNZ CASE73
+MVI A,0EH
+JMP DISP_OUTPUT
+
+CASE73: CPI 03H
+JNZ DISP_LAST
+MVI A,0FH
+JMP DISP_OUTPUT
+
+; Routina exodou
+DISP_OUTPUT: MOV B,A ; Apothikeush kwdikou plhktrou pou paththike
+                     ; ston B
+MVI A,00H ; Mhdenismos twn prwtwn 4 7-segment displays
+STA 0A00H
+STA 0A01H
+STA 0A02H
+STA 0A03H
+MOV A,B ; Epanafora plhktrou pou path8hke ston A
+ANI 0FH ; Apomonwsh tou prwtou dekaexadikou pshfiou tou me maska
+STA 0A04H ; kai apothikeush tou sth thesi 0A04 wste na paei sto 5o
+          ; 7-segment display
+MOV A,B ; Epanafora plhktrou pou path8hke ston A
+RAR ; Metafora most significant dekaexadikou pshfiou sth thesi tou
+RAR ; least significant
+RAR
+RAR
+ANI 0FH ; Apomonwsh tou me maska
+STA 0A05H ; kai apothikeush tou sth thesi 0A05 wste na paei sto 6o
+          ; 7-segment display
+LXI D,0A00H ; Apothikeusi sto zeugos DE ths theshs apo thn opoia
+CALL STDM   ; arxizei to mhnyma kai klhsh ths STDM
+CALL DCD    ; Klhsh ths DCD gia ektypwsh sta 7 segment displays
+JMP CHECK0  ; Epanalave thn anagnwsh tou plhktrologiou
+
+DISP_LAST: LXI D,0A00H ; Ektypwsh teleutaiou plhktrou pou
+CALL STDM              ; paththike
+CALL DCD
+JMP CHECK0 ; Epanalave thn anagnwsh tou plhktrologiou
+
+END

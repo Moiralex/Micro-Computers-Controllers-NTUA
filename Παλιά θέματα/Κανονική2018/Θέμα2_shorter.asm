@@ -1,0 +1,18 @@
+START:
+    IN 20H
+    LXI DE,0008H
+REPEAT:
+    DCR E
+    JZ EXIT
+    RRC
+    JNC REPEAT
+    MOV B,A
+    MOV A,D
+    RAL
+    MOV D,A
+    MOV A,B
+    JMP REPEAT
+EXIT:
+    MOV A,D
+    OUT 30H
+    JMP START
